@@ -2,24 +2,35 @@
 require('babel-register');
 require('babel-polyfill');
 
+// External modules
+const express = require('express');
 const WebpackIsomorphicTools = require('webpack-isomorphic-tools');
+
+// Internal modules
 const config = require('./config');
-const polyfillLocales = require('./intl/polyfillLocales');
+const api = require('./api');
+const ui = require('./ui');
+
+// Constants
 const rootDir = require('path').resolve(__dirname, '..', '..');
 const webpackIsomorphicAssets = require('../../webpack/assets');
-
-if (!process.env.NODE_ENV) {
-  throw new Error(
-    'Environment variable NODE_ENV must be set to development or production.'
-  );
-}
-
-polyfillLocales(global, config.locales);
-
-global.Promise = require('../common/configureBluebird');
 
 global.webpackIsomorphicTools = new WebpackIsomorphicTools(webpackIsomorphicAssets)
   .development(!config.isProduction)
   .server(rootDir, () => {
-    require('./main');
+
+  	// App instance
+	const app = express();
+
+	// Serve API
+	app.use('/api/v1', api);
+
+	// Serve UI
+	app.use(ui);
+
+	// Start listening
+	app.listen(config.port, () => {
+	  console.log('Server started at port %d', config.port);
+	});
+
   });

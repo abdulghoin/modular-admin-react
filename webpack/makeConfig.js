@@ -48,9 +48,9 @@ export default function makeConfig(isDevelopment) {
     entry: {
       app: isDevelopment ? [
         `webpack-hot-middleware/client?path=http://${serverIp}:${constants.HOT_RELOAD_PORT}/__webpack_hmr`,
-        path.join(constants.SRC_DIR, 'browser/index.js')
+        path.join(constants.SRC_DIR, 'browser/index.react.js')
       ] : [
-        path.join(constants.SRC_DIR, 'browser/index.js')
+        path.join(constants.SRC_DIR, 'browser/index.react.js')
       ]
     },
     module: {
