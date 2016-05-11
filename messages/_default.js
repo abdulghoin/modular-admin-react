@@ -1,6 +1,46 @@
 /* eslint-disable max-len, quote-props, quotes */
 export default [
   {
+    "id": "app.buttons.cancel",
+    "defaultMessage": "Cancel"
+  },
+  {
+    "id": "app.buttons.delete",
+    "defaultMessage": "Delete"
+  },
+  {
+    "id": "app.buttons.edit",
+    "defaultMessage": "Edit"
+  },
+  {
+    "id": "app.buttons.login",
+    "defaultMessage": "Login"
+  },
+  {
+    "id": "app.buttons.logout",
+    "defaultMessage": "Logout"
+  },
+  {
+    "id": "app.buttons.save",
+    "defaultMessage": "Save"
+  },
+  {
+    "id": "app.buttons.submit",
+    "defaultMessage": "Submit"
+  },
+  {
+    "id": "app.confirm.areYouSure",
+    "defaultMessage": "Are you sure?"
+  },
+  {
+    "id": "app.confirm.unsavedChanges",
+    "defaultMessage": "You have unsaved changes. Are you sure?"
+  },
+  {
+    "id": "app.links.fields",
+    "defaultMessage": "Fields"
+  },
+  {
     "id": "app.links.firebase",
     "defaultMessage": "Firebase"
   },
@@ -53,44 +93,108 @@ export default [
     "defaultMessage": "Hint: pass1"
   },
   {
-    "id": "auth.login.loginButton",
-    "defaultMessage": "Login"
-  },
-  {
     "id": "auth.login.passwordPlaceholder",
     "defaultMessage": "password"
   },
   {
-    "id": "auth.logout",
-    "defaultMessage": "Logout"
+    "id": "fields.page.h2",
+    "defaultMessage": "redux-fields demonstration"
   },
   {
-    "id": "auth.page.title",
-    "defaultMessage": "Login"
+    "id": "fields.page.p",
+    "defaultMessage": "Something like redux-form but simplified."
+  },
+  {
+    "id": "firebase.error.EMAIL_TAKEN",
+    "defaultMessage": "The new user account cannot be created because the\n      specified email address is already in use."
+  },
+  {
+    "id": "firebase.error.INVALID_EMAIL",
+    "defaultMessage": "The specified email is not a valid email."
+  },
+  {
+    "id": "firebase.error.INVALID_PASSWORD",
+    "defaultMessage": "The specified user account password is incorrect."
+  },
+  {
+    "id": "firebase.error.INVALID_USER",
+    "defaultMessage": "The specified user account does not exist."
+  },
+  {
+    "id": "firebase.error.NETWORK_ERROR",
+    "defaultMessage": "The operation could not be performed due to a network error."
+  },
+  {
+    "id": "firebase.login.dismiss",
+    "defaultMessage": "Dismiss"
+  },
+  {
+    "id": "firebase.login.emailLoginOrSignUp",
+    "defaultMessage": "Email Login / Sign Up"
+  },
+  {
+    "id": "firebase.login.emailPasswordRecovery",
+    "defaultMessage": "Email Password Recovery"
+  },
+  {
+    "id": "firebase.login.emailPlaceholder",
+    "defaultMessage": "your@email.com"
+  },
+  {
+    "id": "firebase.login.facebookLogin",
+    "defaultMessage": "Facebook Login"
+  },
+  {
+    "id": "firebase.login.passwordForgotten",
+    "defaultMessage": "Forgot your password?"
+  },
+  {
+    "id": "firebase.login.passwordPlaceholder",
+    "defaultMessage": "password"
+  },
+  {
+    "id": "firebase.login.recoveryEmailSent",
+    "defaultMessage": "Recovery email has been sent."
+  },
+  {
+    "id": "firebase.login.resetPassword",
+    "defaultMessage": "Reset Password"
+  },
+  {
+    "id": "firebase.login.signUp",
+    "defaultMessage": "Sign Up"
+  },
+  {
+    "id": "firebase.login.unknownError",
+    "defaultMessage": "An unknown error occurred."
+  },
+  {
+    "id": "firebase.page.loadMore",
+    "defaultMessage": "Load more"
+  },
+  {
+    "id": "firebase.profile.greeting",
+    "defaultMessage": "Hi"
+  },
+  {
+    "id": "firebase.users.lastLoggedInUsers",
+    "defaultMessage": "Last {limitToLast} Logged In Users"
   },
   {
     "id": "footer.madeByHtml",
-    "defaultMessage": "made by <a href=\"https://twitter.com/steida\">steida</a>"
+    "defaultMessage": "Made with love by <a href=\"https://twitter.com/steida\">Steida</a>"
   },
   {
     "id": "home.intro",
-    "defaultMessage": "<p>\n        Ahoy, this is\n        <a target=\"_blank\" href=\"https://github.com/este/este\">Este</a> dev stack.\n      </p>"
+    "defaultMessage": "<p>\n        Ahoy, this is the\n        <a target=\"_blank\" href=\"https://github.com/este/este\">Este</a> dev stack.\n      </p>"
   },
   {
     "id": "home.native.intro",
     "defaultMessage": "Este App\n      Press CMD+R to reload\n      Press CMD+D for debug menu"
   },
   {
-    "id": "home.title",
-    "defaultMessage": "Home"
-  },
-  {
     "id": "intl.page.h2",
     "defaultMessage": "react-intl demonstration"
-  },
-  {
-    "id": "intl.page.title",
-    "defaultMessage": "Intl"
   },
   {
     "id": "intl.page.unreadCount",
@@ -103,10 +207,6 @@ export default [
   {
     "id": "me.page.linkToSettings",
     "defaultMessage": "Settings"
-  },
-  {
-    "id": "me.page.title",
-    "defaultMessage": "Me"
   },
   {
     "id": "me.page.welcome",
@@ -155,10 +255,6 @@ export default [
   {
     "id": "todos.newTodo.placeholder",
     "defaultMessage": "What needs to be done?"
-  },
-  {
-    "id": "todos.page.title",
-    "defaultMessage": "Todos"
   },
   {
     "id": "todos.todos.empty",

@@ -6,7 +6,6 @@ import fs from 'fs';
 import gulp from 'gulp';
 import gulpIf from 'gulp-if';
 import mochaRunCreator from './test/mochaRunCreator';
-import os from 'os';
 import path from 'path';
 import runSequence from 'run-sequence';
 import shell from 'gulp-shell';
@@ -41,21 +40,15 @@ gulp.task('build-webpack', ['env'], webpackBuild);
 gulp.task('build', ['build-webpack']);
 
 gulp.task('eslint', () => runEslint());
-
-// Exit process with an error code (1) on lint error for CI build.
 gulp.task('eslint-ci', () => runEslint().pipe(eslint.failAfterError()));
 
 gulp.task('mocha', () => {
   mochaRunCreator('process')();
 });
-
-// Enable to run single test file
-// ex. gulp mocha-file --file src/browser/components/__test__/Button.js
 gulp.task('mocha-file', () => {
+  // Example: gulp mocha-file --file src/browser/components/__test__/Button.js
   mochaRunCreator('process')({ path: path.join(__dirname, args.file) });
 });
-
-// Continuous test running
 gulp.task('mocha-watch', () => {
   gulp.watch(
     ['src/browser/**', 'src/common/**', 'src/server/**'],
@@ -74,7 +67,6 @@ gulp.task('server-nodemon', shell.task(
   // Normalize makes path cross platform.
   path.normalize('node_modules/.bin/nodemon --ignore webpack-assets.json src/server')
 ));
-
 gulp.task('server', ['env'], done => {
   if (args.production) {
     runSequence('clean', 'build', 'server-node', done);
@@ -88,7 +80,7 @@ gulp.task('default', ['server']);
 
 // Prerender app to HTML files. Useful for static hostings like Firebase.
 // Test (OSX): cd build && python -m SimpleHTTPServer 8000
-gulp.task('to-html', ['env'], done => {
+gulp.task('to-html', done => {
   args.production = true;
   process.env.IS_SERVERLESS = true;
 
@@ -150,85 +142,67 @@ gulp.task('to-html', ['env'], done => {
 // React Native
 
 gulp.task('native', done => {
-  // native/config.js
   const config = require('./src/server/config');
   const { appName, defaultLocale, firebaseUrl, locales } = config;
+  const messages = require('./src/server/intl/loadMessages')();
   fs.writeFile('src/native/config.js',
-// Yeah, that's how ES6 template string indentation works.
 `/* eslint-disable eol-last, quotes, quote-props */
 export default ${
   JSON.stringify({ appName, defaultLocale, firebaseUrl, locales }, null, 2)
-};`
-  );
-  // native/messages.js
-  const messages = require('./src/server/intl/loadMessages')();
+};`);
   fs.writeFile('src/native/messages.js',
 `/* eslint-disable eol-last, max-len, quotes, quote-props */
 export default ${
   JSON.stringify(messages, null, 2)
-};`
-  );
+};`);
   done();
 });
 
+// If this doesn't work, while manual Xcode works, try:
+// 1) delete ios/build directory
+// 2) reset content and settings in iOS simulator
 gulp.task('ios', ['native'], bg('react-native', 'run-ios'));
 gulp.task('android', ['native'], bg('react-native', 'run-android'));
 
-// Various fixes for react-native issues. Must be called after npm install.
+// Various fixes for react-native issues.
 gulp.task('fix-react-native', done => {
-  runSequence('fix-native-babelrc-files', 'fix-native-fbjs', done);
+  runSequence('fix-native-babelrc-files', done);
 });
 
 // https://github.com/facebook/react-native/issues/4062#issuecomment-164598155
-// Still broken in RN 0.20. Remove fbjs from package.json after fix.
+// Still broken in RN 0.23.1
 gulp.task('fix-native-babelrc-files', () =>
   del(['node_modules/**/.babelrc', '!node_modules/react-native/**'])
 );
 
-// https://github.com/facebook/react-native/issues/5467#issuecomment-173989493
-// Still broken in RN 0.20. Remove fbjs from package.json after fix.
-gulp.task('fix-native-fbjs', () =>
-  del(['node_modules/**/fbjs', '!node_modules/fbjs'])
-);
-
-// Tasks for issues seem to be already fixed.
-
-// Fix for custom .babelrc cache issue.
-// https://github.com/facebook/react-native/issues/1924#issuecomment-120170512
-gulp.task('clear-react-packager-cache', () => {
-  // Clear react-packager cache
-  const tempDir = os.tmpdir();
-
-  const cacheFiles = fs.readdirSync(tempDir).filter(
-    fileName => fileName.indexOf('react-packager-cache') === 0
-  );
-
-  cacheFiles.forEach(cacheFile => {
-    const cacheFilePath = path.join(tempDir, cacheFile);
-    fs.unlinkSync(cacheFilePath);
-    console.log('Deleted cache: ', cacheFilePath);
-  });
-
-  if (!cacheFiles.length) {
-    console.log('No cache files found!');
-  }
-});
-
 gulp.task('bare', () => {
   console.log(`
-    If you want to have bare Este without examples, you have to it manually now.
+    Steps to make bare Este app.
 
-    Here is a quick checklist:
-      - remove /src/browser/todos, /src/common/todos, /src/native/todos dirs
-      - remove todos reducer from /src/common/app/reducer.js
-      - remove todos routes from /src/browser/createRoutes.js
-      - remove link from /src/browser/app/Header.react.js
+    How to remove one app feature, todos for example
+      - remove src/browser/todos, src/common/todos, src/native/todos dirs
+      - remove todos reducer from src/common/app/reducer.js
+      - remove todos routes from src/browser/createRoutes.js
+      - remove link from src/browser/app/Header.react.js
+
+    Files need to be updated for fresh new Este app
+      - package.json, set app name
+      - src/server/config.js
+      - src/{browser, native}/main.js, import only needed locale-data
+      - src/{browser, native}/createRoutes.js
+      - src/{browser, native}/app/*.*
+      - Unused code should be deleted as well. TODO: Make a gulp task for it.
 
     Yeah, it's that easy.
   `);
 });
 
-gulp.task('extractDefaultMessages', () => {
+// An example of deploy to Firebase static hosting.
+gulp.task('deploy', ['to-html'], shell.task([
+  'firebase deploy'
+]));
+
+gulp.task('extractMessages', () => {
   const through = require('through2');
   const babel = require('babel-core');
   const messages = [];
@@ -254,4 +228,29 @@ gulp.task('extractDefaultMessages', () => {
     const es6code = `${eslint}\nexport default ${json};\n`;
     fs.writeFile('messages/_default.js', es6code);
   });
+});
+
+gulp.task('checkMessages', () => {
+  const loadMessages = require('./src/server/intl/loadMessages');
+  const messages = loadMessages({ includeDefault: true });
+  const defaultMessagesKeys = Object.keys(messages._default);
+
+  const diff = (a, b) => a.filter(item => b.indexOf(item) === -1);
+  const log = (what, messagesKeys) => {
+    if (!messagesKeys.length) return;
+    console.log(`  ${what}`);
+    messagesKeys.forEach(messageKey => console.log(`    ${messageKey}`));
+  };
+
+  Object.keys(messages)
+    .filter(key => key !== '_default')
+    .forEach(locale => {
+      const localeMessagesKeys = Object.keys(messages[locale]);
+      const missingMessagesKeys = diff(defaultMessagesKeys, localeMessagesKeys);
+      const unusedMessagesKeys = diff(localeMessagesKeys, defaultMessagesKeys);
+      if (!missingMessagesKeys.length && !unusedMessagesKeys.length) return;
+      console.log(locale);
+      log('missing messages', missingMessagesKeys);
+      log('unused messages', unusedMessagesKeys);
+    });
 });
