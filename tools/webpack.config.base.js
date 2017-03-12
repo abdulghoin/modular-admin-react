@@ -25,7 +25,10 @@ module.exports = {
             loader: 'style-loader'
           },
           {
-            loader: 'css-loader'
+            loader: 'css-loader',
+            options: {
+              modules: true
+            },
           },
           {
             loader: 'sass-loader',
@@ -47,13 +50,20 @@ module.exports = {
       {
         test: /\.css$/,
         use: [
-          "style-loader",
-          "css-loader"
+          {
+            loader: 'style-loader'
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true
+            },
+          }
         ]
       },
       {
         test: /\.png$/,
-        loader: "url-loader",
+        loader: 'url-loader',
         options: {
           limit: 100000
         }

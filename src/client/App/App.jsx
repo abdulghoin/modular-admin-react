@@ -1,13 +1,11 @@
 // Libs
 import React, { Component, PropTypes } from 'react';
 
-
 // Components
+import app from './App.scss';
 import Header from './_common/Header';
 import Footer from './_common/Footer';
 import Sidebar from './_common/Sidebar';
-
-// Styled components
 import {
   AppContainer,
   AppContent,
@@ -20,14 +18,14 @@ export default class App extends Component {
 
   render() {
     return (
-      <AppContainer className="AppContainer">
+      <div className={app}>
         <Header />
         <Sidebar />
         <AppContent className="AppContent">
           {this.props.children}
         </AppContent>
         <Footer />
-      </AppContainer>
+      </div>
     );
   }
 }
